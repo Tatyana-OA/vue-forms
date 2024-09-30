@@ -26,29 +26,24 @@
       </div>
 
       <h3>Extras</h3>
-      <div>
-        <input type="checkbox" v-model="event.extras.catering" class="field" />
-        <label>Catering</label>
-      </div>
+      <BaseCheckbox label="Catering" v-model="event.extras.catering" />
 
-      <div>
-        <input type="checkbox" v-model="event.extras.music" class="field" />
-        <label>Live music</label>
-      </div>
-
+      <BaseCheckbox label="Live Music" v-model="event.extras.music" />
       <button type="submit">Submit</button>
     </form>
   </div>
 </template>
 
 <script>
+import BaseCheckbox from './BaseCheckbox.vue'
 import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
 
 export default {
   components: {
     BaseInput,
-    BaseSelect
+    BaseSelect,
+    BaseCheckbox
   },
   data() {
     return {
