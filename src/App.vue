@@ -321,4 +321,7 @@ select::ms-expand {
 .button.-icon-center {
   padding: 0 20px;
 }
+label {
+  color: black;
+}
 </style>

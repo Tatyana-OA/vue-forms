@@ -2,28 +2,43 @@
   <div>
     <h1>Create an event</h1>
     <form @submit.prevent="sendForm">
-      <BaseSelect label="Select a category" :options="categories" v-model="event.category" />
+      <BaseSelect
+        label="Select a category"
+        :options="categories"
+        v-model="event.category"
+        name="select"
+      />
 
-      <h3>Name & describe your event</h3>
+      <fieldset>
+        <legend>Name & describe your event</legend>
 
-      <BaseInput label="Title" v-model="event.title" type="text" />
+        <BaseInput label="Title" v-model="event.title" type="text" />
 
-      <BaseInput label="Description" v-model="event.description" type="text" />
+        <BaseInput label="Description" v-model="event.description" type="text" />
+      </fieldset>
 
-      <h3>Where is your event?</h3>
+      <fieldset>
+        <legend>Where is your event?</legend>
 
-      <BaseInput label="Location" v-model="event.location" type="text" />
+        <BaseInput label="Location" v-model="event.location" type="text" />
+      </fieldset>
 
-      <h3>Are pets allowed?</h3>
+      <fieldset>
+        <legend>Pets</legend>
+        <p>Are pets allowed?</p>
 
-      <div>
-        <BaseRadioGroup v-model="event.pets" name="pets" :options="petOptions" />
-      </div>
+        <div>
+          <BaseRadioGroup v-model="event.pets" name="pets" :options="petOptions" />
+        </div>
+      </fieldset>
 
-      <h3>Extras</h3>
-      <BaseCheckbox label="Catering" v-model="event.extras.catering" />
+      <fieldset>
+        <legend>Extras</legend>
+        <BaseCheckbox label="Catering" v-model="event.extras.catering" />
 
-      <BaseCheckbox label="Live Music" v-model="event.extras.music" />
+        <BaseCheckbox label="Live Music" v-model="event.extras.music" />
+      </fieldset>
+
       <button type="submit">Submit</button>
     </form>
   </div>
@@ -82,3 +97,17 @@ export default {
   }
 }
 </script>
+
+<style>
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+</style>
