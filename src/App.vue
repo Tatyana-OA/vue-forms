@@ -328,7 +328,7 @@ select::ms-expand {
 }
 .loginform {
   margin-top: 2rem;
-  background-color: #53b58b54;
+  background: linear-gradient(to right, #16c0af31, #84cf6a);
   padding: 1rem;
   border-radius: 5%;
 }

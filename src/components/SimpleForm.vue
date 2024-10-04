@@ -1,63 +1,63 @@
 <template>
   <div>
-    <h1>Create an event</h1>
-    <form @submit.prevent="sendForm">
+    <h1>Create an Event</h1>
+    <form @submit.prevent="submit">
       <BaseSelect
         label="Select a category"
         :options="categories"
-        v-model="event.category"
-        name="select"
+        v-model="category"
+        :error="errors.category"
       />
 
-      <fieldset>
-        <legend>Name & describe your event</legend>
+      <h3>Name & describe your event</h3>
+      <BaseInput label="Title" type="text" v-model="title" :error="errors.title" />
 
-        <BaseInput label="Title" v-model="event.title" type="text" />
+      <BaseInput
+        label="Description"
+        type="text"
+        v-model="description"
+        :error="errors.description"
+      />
 
-        <BaseInput label="Description" v-model="event.description" type="text" />
-      </fieldset>
+      <h3>Where is your event?</h3>
+      <BaseInput label="Location" type="text" v-model="location" :error="errors.location" />
 
-      <fieldset>
-        <legend>Where is your event?</legend>
+      <h3>Are pets allowed?</h3>
+      <BaseRadioGroup
+        name="pets"
+        :options="[
+          { value: 1, label: 'Yes' },
+          { value: 0, label: 'No' }
+        ]"
+        v-model="pets"
+        :error="errors.pets"
+      />
 
-        <BaseInput label="Location" v-model="event.location" type="text" />
-      </fieldset>
+      <h3>Extras</h3>
+      <div>
+        <BaseCheckbox label="Catering" v-model="catering" :error="errors.catering" />
+      </div>
 
-      <fieldset>
-        <legend>Pets</legend>
-        <p>Are pets allowed?</p>
+      <div>
+        <BaseCheckbox label="Live music" v-model="music" :error="errors.music" />
+      </div>
 
-        <div>
-          <BaseRadioGroup v-model="event.pets" name="pets" :options="petOptions" />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Extras</legend>
-        <BaseCheckbox label="Catering" v-model="event.extras.catering" />
-
-        <BaseCheckbox label="Live Music" v-model="event.extras.music" />
-      </fieldset>
-
-      <button type="submit">Submit</button>
+      <div>
+        <BaseButton type="submit" class="-fill-gradient" something="else"> Submit </BaseButton>
+      </div>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import BaseCheckbox from './BaseCheckbox.vue'
+import { useField, useForm } from 'vee-validate'
 import BaseInput from './BaseInput.vue'
-import BaseRadioGroup from './BaseRadioGroup.vue'
+import BaseButton from './BaseButton.vue'
 import BaseSelect from './BaseSelect.vue'
+import BaseRadioGroup from './BaseRadioGroup.vue'
+import BaseCheckbox from './BaseCheckbox.vue'
 
 export default {
-  components: {
-    BaseInput,
-    BaseSelect,
-    BaseCheckbox,
-    BaseRadioGroup
-  },
   data() {
     return {
       categories: [
@@ -68,46 +68,85 @@ export default {
         'education',
         'food',
         'community'
-      ],
-      event: {
-        category: '',
-        title: '',
-        description: '',
-        location: '',
-        pets: 1,
-        extras: {
-          catering: false,
-          music: false
-        }
-      },
-      petOptions: [
-        { label: 'Yes', value: 1 },
-        { label: 'No', value: 0 }
       ]
     }
   },
-  methods: {
-    sendForm() {
-      //  Mock Requests to: https://my-json-server.typicode.com/Code-Pop/Vue-3-Forms/
-      axios
-        .post('https://my-json-server.typicode.com/Code-Pop/Vue-3-Forms/events', this.event)
-        .then((res) => console.log('Response: ', res))
-        .catch((err) => console.log('Error: ', err))
+  components: {
+    BaseInput,
+    BaseButton,
+    BaseSelect,
+    BaseRadioGroup,
+    BaseCheckbox
+  },
+  setup() {
+    const required = (value) => {
+      const requiredMessage = 'This field is required'
+      if (value === undefined || value === null) return requiredMessage
+      if (!String(value).length) return requiredMessage
+
+      return true
+    }
+
+    const minLength = (number, value) => {
+      if (String(value).length < number) return 'Please type at least ' + number + ' characters'
+
+      return true
+    }
+
+    const anything = () => {
+      return true
+    }
+
+    const validationSchema = {
+      category: required,
+      title: (value) => {
+        const req = required(value)
+        if (req !== true) return req
+
+        const min = minLength(3, value)
+        if (min !== true) return min
+
+        return true
+      },
+      description: required,
+      location: undefined,
+      pets: anything,
+      catering: anything,
+      music: anything
+    }
+
+    const { handleSubmit, errors } = useForm({
+      validationSchema,
+      initialValues: {
+        pets: 1,
+        catering: false,
+        music: false
+      }
+    })
+
+    const { value: category } = useField('category')
+    const { value: title } = useField('title')
+    const { value: description } = useField('description')
+    const { value: location } = useField('location')
+    const { value: pets } = useField('pets')
+    const { value: catering } = useField('catering')
+    const { value: music } = useField('music')
+
+    const submit = handleSubmit((values) => {
+      console.log('submit', values)
+    })
+
+    return {
+      category,
+      title,
+      description,
+      location,
+      pets,
+      catering,
+      music,
+      submit,
+      errors
     }
   }
 }
 </script>
-
-<style>
-fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
-
-legend {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 20px;
-}
-</style>

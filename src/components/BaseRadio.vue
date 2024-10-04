@@ -1,18 +1,23 @@
 <template>
   <input
     type="radio"
+    v-bind="{ ...$attrs, onChange: updateValue }"
     :checked="modelValue === value"
-    :value="value"
-    name="pets"
-    @change="$emit('update:modelValue', value)"
-    v-bind="$attrs"
     :id="uuid"
   />
-  <label v-if="label" :for="uuid">{{ label }}</label>
+  <label v-if="label" :for="uuid">
+    {{ label }}
+  </label>
+  <BaseErrorMessage v-if="error" :id="`${uuid}-error`">
+    {{ error }}
+  </BaseErrorMessage>
 </template>
 
 <script>
 import UniqueID from '@/util/getID'
+import SetupFormComponent from '@/util/SetupFormComponent'
+import BaseErrorMessage from './BaseErrorMessage.vue'
+
 export default {
   props: {
     label: {
@@ -20,20 +25,27 @@ export default {
       default: ''
     },
     modelValue: {
-      type: [String, Number],
-      default: ''
+      type: [String, Number]
     },
     value: {
-      type: [String, Number],
-      required: true
+      type: [String, Number]
+    },
+    error: {
+      type: String,
+      default: ''
     }
   },
-  setup() {
+  setup(props, context) {
     const uuid = UniqueID().getID()
+    const { updateValue } = SetupFormComponent(props, context)
 
     return {
+      updateValue,
       uuid
     }
+  },
+  components: {
+    BaseErrorMessage
   }
 }
 </script>
