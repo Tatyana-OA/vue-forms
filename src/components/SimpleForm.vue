@@ -30,7 +30,6 @@
           { value: 0, label: 'No' }
         ]"
         v-model="pets"
-        :error="errors.pets"
       />
 
       <h3>Extras</h3>
@@ -56,6 +55,7 @@ import BaseButton from './BaseButton.vue'
 import BaseSelect from './BaseSelect.vue'
 import BaseRadioGroup from './BaseRadioGroup.vue'
 import BaseCheckbox from './BaseCheckbox.vue'
+import { object, string, number, boolean } from 'yup'
 
 export default {
   data() {
@@ -79,41 +79,15 @@ export default {
     BaseCheckbox
   },
   setup() {
-    const required = (value) => {
-      const requiredMessage = 'This field is required'
-      if (value === undefined || value === null) return requiredMessage
-      if (!String(value).length) return requiredMessage
-
-      return true
-    }
-
-    const minLength = (number, value) => {
-      if (String(value).length < number) return 'Please type at least ' + number + ' characters'
-
-      return true
-    }
-
-    const anything = () => {
-      return true
-    }
-
-    const validationSchema = {
-      category: required,
-      title: (value) => {
-        const req = required(value)
-        if (req !== true) return req
-
-        const min = minLength(3, value)
-        if (min !== true) return min
-
-        return true
-      },
-      description: required,
-      location: undefined,
-      pets: anything,
-      catering: anything,
-      music: anything
-    }
+    const validationSchema = object({
+      category: string().required(),
+      title: string().required('A cool title is required').min(3),
+      description: string('A description is required').required(),
+      location: string(),
+      pets: number(),
+      catering: boolean(),
+      music: boolean()
+    })
 
     const { handleSubmit, errors } = useForm({
       validationSchema,
