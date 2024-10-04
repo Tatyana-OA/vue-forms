@@ -23,6 +23,7 @@
 <script>
 import SetupFormComponent from '@/util/SetupFormComponent'
 import UniqueID from '@/util/getID'
+import BaseErrorMessage from './BaseErrorMessage.vue'
 
 export default {
   props: {
@@ -38,6 +39,9 @@ export default {
       type: [String, Number],
       default: ''
     }
+  },
+  components: {
+    BaseErrorMessage
   },
   setup(props, context) {
     const { updateValue } = SetupFormComponent(props, context)
