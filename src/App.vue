@@ -1,4 +1,5 @@
 <script setup>
+import LoginForm from './components/LoginForm.vue'
 import SimpleForm from './components/SimpleForm.vue'
 </script>
 
@@ -7,6 +8,7 @@ import SimpleForm from './components/SimpleForm.vue'
 
   <main>
     <SimpleForm />
+    <LoginForm />
   </main>
 </template>
 
@@ -199,6 +201,7 @@ textarea {
 [type='text'],
 [type='number'],
 [type='search'],
+[type='email'],
 [type='password'] {
   height: 52px;
   width: 100%;
@@ -208,6 +211,7 @@ textarea {
 [type='text']:focus,
 [type='number']:focus,
 [type='search']:focus,
+[type='email']:focus,
 [type='password']:focus {
   border-color: #39b982;
 }
@@ -255,6 +259,7 @@ select::ms-expand {
 }
 .errorMessage {
   color: red;
+  display: block;
 }
 .button {
   display: inline-flex;
@@ -321,7 +326,10 @@ select::ms-expand {
 .button.-icon-center {
   padding: 0 20px;
 }
-label {
-  color: black;
+.loginform {
+  margin-top: 2rem;
+  background-color: #53b58b54;
+  padding: 1rem;
+  border-radius: 5%;
 }
 </style>
